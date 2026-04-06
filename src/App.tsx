@@ -39,6 +39,7 @@ import Support from './pages/client/Support'
 // Partner pages
 import PartnerHome from './pages/partner/Home'
 import Referrals from './pages/partner/Referrals'
+import Commissions from './pages/partner/Commissions'
 import Payouts from './pages/partner/Payouts'
 import Resources from './pages/partner/Resources'
 import PartnerSettings from './pages/partner/Settings'
@@ -138,7 +139,7 @@ function App() {
           >
             <Route index element={<PartnerHome />} />
             <Route path="referrals" element={<Referrals />} />
-            <Route path="commissions" element={<div className="text-center text-2xl text-muted-foreground">Commissions - Coming Soon</div>} />
+            <Route path="commissions" element={<Commissions />} />
             <Route path="payouts" element={<Payouts />} />
             <Route path="resources" element={<Resources />} />
             <Route path="settings" element={<PartnerSettings />} />
