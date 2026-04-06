@@ -1,27 +1,29 @@
 // API client for Ariel backend
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://3.223.102.157:8000'
-const ADMIN_USERNAME = import.meta.env.VITE_ADMIN_USERNAME || 'admin'
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'ariel2024'
+import { getAccessToken } from './auth'
 
-// Create basic auth header
-function getAuthHeader(): string {
-  const credentials = btoa(`${ADMIN_USERNAME}:${ADMIN_PASSWORD}`)
-  return `Basic ${credentials}`
-}
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://3.223.102.157:8000'
 
 async function fetchAPI<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
+  const token = getAccessToken()
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': getAuthHeader(),
+      ...(token && { 'Authorization': `Bearer ${token}` }),
       ...options.headers,
     },
   })
+
+  if (response.status === 401) {
+    // Token expired or invalid - redirect to login
+    window.location.href = '/login'
+    throw new Error('Session expired')
+  }
 
   if (!response.ok) {
     throw new Error(`API error: ${response.status} ${response.statusText}`)
