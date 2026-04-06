@@ -269,3 +269,99 @@ export interface ChatMessage {
   delivered_at?: string
   read_at?: string
 }
+
+// Partner Dashboard API
+export interface PartnerProfile {
+  partner_id: string
+  first_name: string
+  last_name: string
+  email: string
+  phone?: string
+  company_name?: string
+  referral_code: string
+  commission_rate: number
+  status: string
+  created_at: string
+}
+
+export interface Referral {
+  referral_id: string
+  client_id: string
+  client_name: string
+  client_email: string
+  referral_code_used: string
+  signup_date?: string
+  client_status: string
+  current_plan?: string
+  current_mrr: number
+  created_at: string
+}
+
+export interface Commission {
+  commission_id: string
+  referral_id: string
+  client_name: string
+  period_start: string
+  period_end: string
+  revenue_amount: number
+  commission_rate: number
+  commission_amount: number
+  status: string
+  paid_at?: string
+}
+
+export interface CommissionStats {
+  total_earnings: number
+  pending_earnings: number
+  paid_earnings: number
+  total_referrals: number
+  active_referrals: number
+  this_month_earnings: number
+}
+
+export interface Payout {
+  payout_id: string
+  period_start: string
+  period_end: string
+  gross_amount: number
+  net_amount: number
+  method: string
+  status: string
+  initiated_at?: string
+  paid_at?: string
+  created_at: string
+}
+
+export const partnerAPI = {
+  // Profile
+  getProfile: () => fetchAPI<PartnerProfile>('/api/partner/profile'),
+  updateProfile: (data: Partial<PartnerProfile>) =>
+    fetchAPI<PartnerProfile>('/api/partner/profile', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  // Referrals
+  getReferrals: (status?: string) =>
+    fetchAPI<Referral[]>(`/api/partner/referrals${status ? `?status=${status}` : ''}`),
+  getReferralLink: () =>
+    fetchAPI<{ referral_code: string; referral_link: string; qr_code_url: string }>(
+      '/api/partner/referral-link'
+    ),
+
+  // Commissions
+  getCommissions: (period?: string) =>
+    fetchAPI<Commission[]>(`/api/partner/commissions${period ? `?period=${period}` : ''}`),
+  getCommissionStats: () => fetchAPI<CommissionStats>('/api/partner/commissions/stats'),
+
+  // Payouts
+  getPayouts: () => fetchAPI<Payout[]>('/api/partner/payouts'),
+  requestPayout: () =>
+    fetchAPI<{ success: boolean; message: string; payout_id: string; amount: number }>(
+      '/api/partner/payouts/request',
+      { method: 'POST' }
+    ),
+
+  // Resources
+  getResources: () => fetchAPI<any[]>('/api/partner/resources'),
+}

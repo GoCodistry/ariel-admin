@@ -31,6 +31,13 @@ import ClientUsage from './pages/client/Usage'
 import ClientSettings from './pages/client/Settings'
 import Support from './pages/client/Support'
 
+// Partner pages
+import PartnerHome from './pages/partner/Home'
+import Referrals from './pages/partner/Referrals'
+import Payouts from './pages/partner/Payouts'
+import Resources from './pages/partner/Resources'
+import PartnerSettings from './pages/partner/Settings'
+
 // Helper component for role-based redirect
 function RoleBasedRedirect() {
   const { user, isAuthenticated, isLoading } = useAuth()
@@ -119,12 +126,12 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<div className="text-center text-2xl text-muted-foreground">Partner Dashboard - Coming Soon</div>} />
-            <Route path="referrals" element={<div className="text-center text-2xl text-muted-foreground">My Referrals - Coming Soon</div>} />
+            <Route index element={<PartnerHome />} />
+            <Route path="referrals" element={<Referrals />} />
             <Route path="commissions" element={<div className="text-center text-2xl text-muted-foreground">Commissions - Coming Soon</div>} />
-            <Route path="payouts" element={<div className="text-center text-2xl text-muted-foreground">Payouts - Coming Soon</div>} />
-            <Route path="resources" element={<div className="text-center text-2xl text-muted-foreground">Resources - Coming Soon</div>} />
-            <Route path="settings" element={<div className="text-center text-2xl text-muted-foreground">Partner Settings - Coming Soon</div>} />
+            <Route path="payouts" element={<Payouts />} />
+            <Route path="resources" element={<Resources />} />
+            <Route path="settings" element={<PartnerSettings />} />
           </Route>
 
           {/* Root redirect based on role */}
