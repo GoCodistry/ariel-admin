@@ -11,7 +11,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { getAccessToken } from '@/lib/auth'
 
-const WS_BASE_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:8000'
+const WS_BASE_URL = import.meta.env.VITE_WS_URL || (
+  typeof window !== 'undefined'
+    ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}`
+    : 'ws://localhost:8000'
+)
 
 export interface WebSocketMessage {
   type: 'connected' | 'message' | 'typing' | 'error' | 'pong'
