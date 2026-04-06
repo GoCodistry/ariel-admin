@@ -233,4 +233,39 @@ export const clientAPI = {
     fetchAPI<{ success: boolean; message: string }>(`/api/client/agents/${agentId}/resume`, {
       method: 'POST',
     }),
+
+  // Chat
+  getConversations: () => fetchAPI<ConversationSummary[]>('/api/chat/conversations'),
+  getOrCreateConversation: (agentId: string) =>
+    fetchAPI<ConversationSummary>(`/api/chat/conversations/agent/${agentId}`),
+  getConversationMessages: (conversationId: string, limit?: number) =>
+    fetchAPI<ChatMessage[]>(
+      `/api/chat/conversations/${conversationId}/messages${limit ? `?limit=${limit}` : ''}`
+    ),
+  markConversationRead: (conversationId: string) =>
+    fetchAPI<{ success: boolean }>(`/api/chat/conversations/${conversationId}/read`, {
+      method: 'POST',
+    }),
+}
+
+export interface ConversationSummary {
+  conversation_id: string
+  agent_id: string
+  agent_name: string
+  agent_emoji: string
+  status: string
+  last_message_at?: string
+  unread_count: number
+  created_at: string
+}
+
+export interface ChatMessage {
+  message_id: string
+  conversation_id: string
+  sender_type: 'client' | 'agent'
+  content: string
+  status: string
+  sent_at: string
+  delivered_at?: string
+  read_at?: string
 }

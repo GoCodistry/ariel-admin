@@ -145,15 +145,22 @@ export default function MyAgents() {
 
               <div className="flex gap-2">
                 <Button
-                  variant="outline"
                   size="sm"
                   className="flex-1"
                   asChild
                 >
-                  <Link to={`/dashboard/agents/${agent.agent_id}`}>
-                    <Settings className="h-4 w-4 mr-2" />
-                    Configure
+                  <Link to={`/dashboard/agents/${agent.agent_id}/chat`}>
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Chat
                   </Link>
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  asChild
+                >
+                  <Settings className="h-4 w-4" />
                 </Button>
 
                 {agent.status === 'active' ? (

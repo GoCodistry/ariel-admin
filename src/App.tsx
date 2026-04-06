@@ -25,6 +25,7 @@ import PartnerDetail from './pages/admin/PartnerDetail'
 // Client pages
 import ClientHome from './pages/client/Home'
 import MyAgents from './pages/client/MyAgents'
+import AgentChat from './pages/client/AgentChat'
 import ClientSettings from './pages/client/Settings'
 
 // Helper component for role-based redirect
@@ -99,6 +100,7 @@ function App() {
           >
             <Route index element={<ClientHome />} />
             <Route path="agents" element={<MyAgents />} />
+            <Route path="agents/:agentId/chat" element={<AgentChat />} />
             <Route path="integrations" element={<div className="text-center text-2xl text-muted-foreground">Integrations - Coming Soon</div>} />
             <Route path="usage" element={<div className="text-center text-2xl text-muted-foreground">Usage & Billing - Coming Soon</div>} />
             <Route path="settings" element={<ClientSettings />} />
