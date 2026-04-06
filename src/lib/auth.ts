@@ -17,7 +17,7 @@ import {
   ChangePasswordData,
 } from '@/types/auth.types'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://3.223.102.157:8000'
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
 const TOKEN_KEY = 'ariel_access_token'
 
 // ============================================================================
