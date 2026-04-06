@@ -159,7 +159,8 @@ export function useWebSocket({
     return () => {
       disconnect()
     }
-  }, [connect, disconnect])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [agentId])
 
   return {
     isConnected,

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { useChat } from '@/hooks/useChat'
 import { MessageBubble } from './MessageBubble'
 import { MessageInput } from './MessageInput'
@@ -24,18 +24,42 @@ export function ChatInterface({ agentId, className = '' }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-scroll to bottom when new messages arrive or typing status changes
+  const scrollToBottom = useCallback(() => {
+    // Use requestAnimationFrame to ensure DOM has updated
+    requestAnimationFrame(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+      }
+    })
+  }, [])
+
+  // Scroll when messages change, typing status changes, or history finishes loading
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    scrollToBottom()
+  }, [messages, isTyping, scrollToBottom])
+
+  // Scroll to bottom when history finishes loading (returning to chat)
+  useEffect(() => {
+    if (!isLoadingHistory && messages.length > 0) {
+      // Use instant scroll (no animation) when loading history
+      requestAnimationFrame(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: 'instant' })
+        }
+      })
     }
-  }, [messages, isTyping])
+  }, [isLoadingHistory, messages.length])
 
   const handleSendMessage = (content: string) => {
     const success = sendMessage(content)
     if (!success) {
       console.error('Failed to send message')
+      return
     }
+
+    // Immediately scroll to show the user's message
+    setTimeout(scrollToBottom, 0)
   }
 
   if (isLoadingHistory) {

@@ -32,17 +32,8 @@ export function useChat({ agentId, conversationId: initialConversationId }: UseC
   const [isLoadingHistory, setIsLoadingHistory] = useState(true)
   const [agentInfo, setAgentInfo] = useState<{ name: string; emoji: string } | null>(null)
 
-  // WebSocket connection
-  const { isConnected, sendMessage: wsSendMessage } = useWebSocket({
-    agentId,
-    onMessage: handleWebSocketMessage,
-    onConnect: () => {
-      console.log('Chat connected')
-    },
-  })
-
   // Handle incoming WebSocket messages
-  function handleWebSocketMessage(wsMessage: WebSocketMessage) {
+  const handleWebSocketMessage = useCallback((wsMessage: WebSocketMessage) => {
     if (wsMessage.type === 'connected') {
       setConversationId(wsMessage.conversation_id || null)
       setAgentInfo({
@@ -50,17 +41,31 @@ export function useChat({ agentId, conversationId: initialConversationId }: UseC
         emoji: wsMessage.agent_emoji || '🤖',
       })
     } else if (wsMessage.type === 'message') {
-      // Add message to the list
-      setMessages((prev) => [
-        {
-          message_id: wsMessage.message_id!,
-          sender_type: wsMessage.sender_type!,
-          content: wsMessage.content!,
-          sent_at: wsMessage.sent_at!,
-          status: wsMessage.status || 'sent',
-        },
-        ...prev,
-      ])
+      const incomingMessage = {
+        message_id: wsMessage.message_id!,
+        sender_type: wsMessage.sender_type!,
+        content: wsMessage.content!,
+        sent_at: wsMessage.sent_at!,
+        status: wsMessage.status || 'sent',
+      }
+
+      // Update messages, replacing optimistic client messages or adding new ones
+      setMessages((prev) => {
+        // If it's a client message echo, replace the optimistic version
+        if (wsMessage.sender_type === 'client') {
+          const tempMsgIndex = prev.findIndex(
+            (m) => m.sender_type === 'client' && m.content === wsMessage.content && m.message_id.startsWith('temp-')
+          )
+          if (tempMsgIndex !== -1) {
+            // Replace the optimistic message with the real one
+            const updated = [...prev]
+            updated[tempMsgIndex] = incomingMessage
+            return updated
+          }
+        }
+        // Otherwise, add the message to the end
+        return [...prev, incomingMessage]
+      })
 
       // Stop typing indicator if it was an agent message
       if (wsMessage.sender_type === 'agent') {
@@ -69,7 +74,16 @@ export function useChat({ agentId, conversationId: initialConversationId }: UseC
     } else if (wsMessage.type === 'typing') {
       setIsTyping(true)
     }
-  }
+  }, [])
+
+  // WebSocket connection
+  const { isConnected, sendMessage: wsSendMessage } = useWebSocket({
+    agentId,
+    onMessage: handleWebSocketMessage,
+    onConnect: () => {
+      console.log('Chat connected')
+    },
+  })
 
   // Load conversation and message history
   useEffect(() => {
@@ -108,10 +122,23 @@ export function useChat({ agentId, conversationId: initialConversationId }: UseC
     (content: string) => {
       if (!content.trim()) return false
 
+      // Optimistic UI update - add message immediately
+      const optimisticMessage: ChatMessage = {
+        message_id: `temp-${Date.now()}`,
+        sender_type: 'client',
+        content: content.trim(),
+        sent_at: new Date().toISOString(),
+        status: 'sending',
+      }
+
+      setMessages((prev) => [...prev, optimisticMessage])
+
       const success = wsSendMessage(content.trim())
 
       if (!success) {
         console.error('Failed to send message - not connected')
+        // Remove optimistic message on failure
+        setMessages((prev) => prev.filter((m) => m.message_id !== optimisticMessage.message_id))
         return false
       }
 
