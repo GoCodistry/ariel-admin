@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/shared/ProtectedRoute'
+import ErrorBoundary from './components/shared/ErrorBoundary'
 
 // Layouts
 import AdminLayout from './layouts/AdminLayout'
@@ -74,10 +75,11 @@ function RoleBasedRedirect() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Toaster position="top-right" />
-        <Routes>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <Toaster position="top-right" />
+          <Routes>
           {/* Auth routes (public) */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -144,8 +146,9 @@ function App() {
           {/* 404 - redirect to root */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   )
 }
 
