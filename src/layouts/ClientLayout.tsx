@@ -4,6 +4,7 @@ import {
   Bot,
   Puzzle,
   BarChart3,
+  CreditCard,
   Settings,
   HelpCircle,
   LogOut
@@ -16,7 +17,8 @@ const navigation = [
   { name: 'Home', href: '/dashboard', icon: Home },
   { name: 'My Agents', href: '/dashboard/agents', icon: Bot },
   { name: 'Integrations', href: '/dashboard/integrations', icon: Puzzle },
-  { name: 'Usage & Billing', href: '/dashboard/usage', icon: BarChart3 },
+  { name: 'Usage', href: '/dashboard/usage', icon: BarChart3 },
+  { name: 'Billing', href: '/dashboard/billing', icon: CreditCard },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
   { name: 'Help', href: '/dashboard/support', icon: HelpCircle },
 ]

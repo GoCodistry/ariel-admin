@@ -29,8 +29,10 @@ import ChatMonitoring from './pages/admin/ChatMonitoring'
 import ClientHome from './pages/client/Home'
 import MyAgents from './pages/client/MyAgents'
 import AgentChat from './pages/client/AgentChat'
+import AgentConfig from './pages/client/AgentConfig'
 import Integrations from './pages/client/Integrations'
 import ClientUsage from './pages/client/Usage'
+import ClientBilling from './pages/client/Billing'
 import ClientSettings from './pages/client/Settings'
 import Support from './pages/client/Support'
 
@@ -117,8 +119,10 @@ function App() {
             <Route index element={<ClientHome />} />
             <Route path="agents" element={<MyAgents />} />
             <Route path="agents/:agentId/chat" element={<AgentChat />} />
+            <Route path="agents/:agentId/config" element={<AgentConfig />} />
             <Route path="integrations" element={<Integrations />} />
             <Route path="usage" element={<ClientUsage />} />
+            <Route path="billing" element={<ClientBilling />} />
             <Route path="settings" element={<ClientSettings />} />
             <Route path="support" element={<Support />} />
           </Route>

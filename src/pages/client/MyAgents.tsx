@@ -160,7 +160,9 @@ export default function MyAgents() {
                   size="sm"
                   asChild
                 >
-                  <Settings className="h-4 w-4" />
+                  <Link to={`/dashboard/agents/${agent.agent_id}/config`}>
+                    <Settings className="h-4 w-4" />
+                  </Link>
                 </Button>
 
                 {agent.status === 'active' ? (
