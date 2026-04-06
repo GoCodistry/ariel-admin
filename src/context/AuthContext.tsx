@@ -22,6 +22,7 @@ interface AuthContextType {
   logout: () => Promise<void>
   hasRole: (role: string) => boolean
   checkAuth: () => Promise<void>
+  refreshUser: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -121,6 +122,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     hasRole,
     checkAuth,
+    refreshUser: checkAuth, // Alias for checkAuth
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

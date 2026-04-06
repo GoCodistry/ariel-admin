@@ -22,6 +22,11 @@ import AdminUsage from './pages/admin/Usage'
 import Partners from './pages/admin/Partners'
 import PartnerDetail from './pages/admin/PartnerDetail'
 
+// Client pages
+import ClientHome from './pages/client/Home'
+import MyAgents from './pages/client/MyAgents'
+import ClientSettings from './pages/client/Settings'
+
 // Helper component for role-based redirect
 function RoleBasedRedirect() {
   const { user, isAuthenticated, isLoading } = useAuth()
@@ -92,11 +97,11 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<div className="text-center text-2xl text-muted-foreground">Client Dashboard - Coming Soon</div>} />
-            <Route path="agents" element={<div className="text-center text-2xl text-muted-foreground">My Agents - Coming Soon</div>} />
+            <Route index element={<ClientHome />} />
+            <Route path="agents" element={<MyAgents />} />
             <Route path="integrations" element={<div className="text-center text-2xl text-muted-foreground">Integrations - Coming Soon</div>} />
             <Route path="usage" element={<div className="text-center text-2xl text-muted-foreground">Usage & Billing - Coming Soon</div>} />
-            <Route path="settings" element={<div className="text-center text-2xl text-muted-foreground">Settings - Coming Soon</div>} />
+            <Route path="settings" element={<ClientSettings />} />
             <Route path="support" element={<div className="text-center text-2xl text-muted-foreground">Help & Support - Coming Soon</div>} />
           </Route>
 
