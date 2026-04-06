@@ -14,7 +14,7 @@ export default defineConfig({
     port: 5174,
     proxy: {
       '/api': {
-        target: 'http://3.223.102.157:8000',
+        target: 'https://helloariel.ai',
         changeOrigin: true,
       },
     },

@@ -20,7 +20,7 @@ Professional admin dashboard for managing the Ariel AI agent platform.
 - **State Management**: TanStack Query (React Query)
 - **Forms**: React Hook Form + Zod
 - **Charts**: Recharts
-- **Backend API**: FastAPI (running at http://3.223.102.157:8000)
+- **Backend API**: FastAPI (running at https://helloariel.ai)
 
 ## Development
 
@@ -68,7 +68,7 @@ npm run build
 
 2. **Upload to server:**
 ```bash
-scp -r dist ubuntu@3.223.102.157:/var/www/ariel-admin
+scp -i ~/Downloads/ariel-production.pem -r dist ubuntu@3.223.102.157:/var/www/ariel-admin
 ```
 
 3. **Configure Nginx:**
@@ -85,7 +85,7 @@ location /admin {
 sudo systemctl restart nginx
 ```
 
-Access at: `http://3.223.102.157/admin`
+Access at: `https://helloariel.ai/admin`
 
 ### Option 2: Deploy to Vercel/Netlify
 

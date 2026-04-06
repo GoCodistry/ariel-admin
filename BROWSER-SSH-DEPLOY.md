@@ -94,7 +94,7 @@ nano .env
 Find the `ALLOWED_ORIGINS` line and update it to:
 
 ```
-ALLOWED_ORIGINS=https://ariel-signup.lovable.app,http://3.223.102.157
+ALLOWED_ORIGINS=https://helloariel.ai,https://www.helloariel.ai
 ```
 
 Save the file, then restart the backend:
@@ -108,7 +108,7 @@ sudo systemctl status ariel
 
 Open in your browser:
 ```
-http://3.223.102.157/admin
+https://helloariel.ai/admin
 ```
 
 Login with:

@@ -63,7 +63,7 @@ EOF
 echo ""
 echo "✅ Deployment complete!"
 echo ""
-echo "Admin Dashboard URL: http://$SERVER_IP/admin"
+echo "Admin Dashboard URL: https://helloariel.ai/admin"
 echo ""
 echo "Login with:"
 echo "  Username: admin"
