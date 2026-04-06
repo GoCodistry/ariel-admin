@@ -176,6 +176,103 @@ export const analyticsAPI = {
   getRevenue: () => fetchAPI<RevenueStats>('/api/admin/analytics/revenue'),
 }
 
+// Admin User Management & Chat Monitoring API
+export interface AdminUser {
+  user_id: string
+  email: string
+  role: 'admin' | 'client' | 'partner'
+  first_name: string
+  last_name: string
+  email_verified: boolean
+  created_at: string
+  last_login_at?: string
+  login_count: number
+  client_id?: string
+  partner_id?: string
+}
+
+export interface ConversationMonitor {
+  conversation_id: string
+  client_id: string
+  client_name: string
+  client_email: string
+  agent_id: string
+  agent_name: string
+  status: string
+  last_message_at?: string
+  unread_count: number
+  message_count: number
+  created_at: string
+}
+
+export interface SystemStats {
+  total_users: number
+  total_clients: number
+  total_partners: number
+  total_agents: number
+  total_conversations: number
+  total_messages: number
+  active_conversations_today: number
+  messages_today: number
+}
+
+export interface ChatActivity {
+  period_days: number
+  start_date: string
+  messages_by_day: Array<{
+    date: string
+    count: number
+  }>
+}
+
+export const adminAPI = {
+  // User Management
+  listUsers: (role?: string, search?: string) => {
+    const params = new URLSearchParams()
+    if (role) params.append('role', role)
+    if (search) params.append('search', search)
+    return fetchAPI<AdminUser[]>(`/api/admin/users?${params.toString()}`)
+  },
+  impersonateUser: (userId: string) =>
+    fetchAPI<{
+      success: boolean
+      access_token: string
+      token_type: string
+      user: AdminUser
+      message: string
+    }>(`/api/admin/users/${userId}/impersonate`, {
+      method: 'POST',
+    }),
+  deactivateUser: (userId: string) =>
+    fetchAPI<{ success: boolean; message: string }>(`/api/admin/users/${userId}/deactivate`, {
+      method: 'POST',
+    }),
+
+  // Chat Monitoring
+  getConversations: (limit?: number) =>
+    fetchAPI<ConversationMonitor[]>(
+      `/api/admin/chat/conversations${limit ? `?limit=${limit}` : ''}`
+    ),
+  getConversationMessages: (conversationId: string, limit?: number) =>
+    fetchAPI<{
+      conversation_id: string
+      client_name: string
+      agent_name: string
+      messages: Array<{
+        message_id: string
+        sender_type: string
+        content: string
+        status: string
+        sent_at: string
+      }>
+    }>(`/api/admin/chat/conversations/${conversationId}/messages${limit ? `?limit=${limit}` : ''}`),
+
+  // Analytics
+  getSystemStats: () => fetchAPI<SystemStats>('/api/admin/analytics/system-stats'),
+  getChatActivity: (days?: number) =>
+    fetchAPI<ChatActivity>(`/api/admin/analytics/chat-activity${days ? `?days=${days}` : ''}`),
+}
+
 // Client Dashboard API
 export interface ClientProfile {
   client_id: string

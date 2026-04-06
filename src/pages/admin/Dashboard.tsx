@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { clientsAPI, agentsAPI, partnersAPI, analyticsAPI } from '@/lib/api'
+import { clientsAPI, agentsAPI, partnersAPI, analyticsAPI, adminAPI } from '@/lib/api'
 import { formatCurrency, formatPercent } from '@/lib/utils'
-import { Users, Bot, Handshake, DollarSign, TrendingUp, Activity } from 'lucide-react'
+import { Users, Bot, Handshake, DollarSign, TrendingUp, Activity, MessageSquare, UserCheck } from 'lucide-react'
 import {
   BarChart,
   Bar,
@@ -36,6 +36,16 @@ export default function Dashboard() {
     queryFn: analyticsAPI.getRevenue,
   })
 
+  const { data: systemStats } = useQuery({
+    queryKey: ['systemStats'],
+    queryFn: adminAPI.getSystemStats,
+  })
+
+  const { data: chatActivity } = useQuery({
+    queryKey: ['chatActivity'],
+    queryFn: () => adminAPI.getChatActivity(7),
+  })
+
   const activeClients = clients?.filter((c) => c.status === 'active').length || 0
   const trialClients = clients?.filter((c) => c.status === 'trial').length || 0
   const activeAgents = agents?.filter((a) => a.status === 'active').length || 0
@@ -58,6 +68,12 @@ export default function Dashboard() {
     { month: 'May', clients: 36 },
     { month: 'Jun', clients: 45 },
   ]
+
+  // Transform chat activity data for the chart
+  const chatActivityData = chatActivity?.messages_by_day?.map((day) => ({
+    date: new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    messages: day.count,
+  })) || []
 
   return (
     <div className="space-y-8">
@@ -118,6 +134,63 @@ export default function Dashboard() {
         </Card>
       </div>
 
+      {/* Additional System Stats */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <UserCheck className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{systemStats?.total_users || 0}</div>
+            <p className="text-xs text-muted-foreground">
+              All roles combined
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Conversations</CardTitle>
+            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{systemStats?.total_conversations || 0}</div>
+            <p className="text-xs text-muted-foreground">
+              {systemStats?.active_conversations_today || 0} active today
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Messages</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{systemStats?.total_messages || 0}</div>
+            <p className="text-xs text-muted-foreground">
+              {systemStats?.messages_today || 0} sent today
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Churn Rate</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {formatPercent(revenue?.churn_rate || 0)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Monthly churn rate
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Charts */}
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
@@ -141,18 +214,18 @@ export default function Dashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Client Growth</CardTitle>
+            <CardTitle>Message Activity (Last 7 Days)</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={clientGrowthData}>
+              <LineChart data={chatActivityData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
+                <XAxis dataKey="date" />
                 <YAxis />
                 <Tooltip />
                 <Line
                   type="monotone"
-                  dataKey="clients"
+                  dataKey="messages"
                   stroke="hsl(var(--primary))"
                   strokeWidth={2}
                 />

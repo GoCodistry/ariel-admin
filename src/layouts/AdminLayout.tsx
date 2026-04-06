@@ -5,7 +5,9 @@ import {
   Bot,
   BarChart3,
   Handshake,
-  LogOut
+  LogOut,
+  UserCog,
+  MessageSquare
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/context/AuthContext'
@@ -17,6 +19,8 @@ const navigation = [
   { name: 'Agents', href: '/admin/agents', icon: Bot },
   { name: 'Usage', href: '/admin/usage', icon: BarChart3 },
   { name: 'Partners', href: '/admin/partners', icon: Handshake },
+  { name: 'Users', href: '/admin/users', icon: UserCog },
+  { name: 'Chat Monitoring', href: '/admin/chat-monitoring', icon: MessageSquare },
 ]
 
 export default function AdminLayout() {

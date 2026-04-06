@@ -21,6 +21,8 @@ import AgentDetail from './pages/admin/AgentDetail'
 import AdminUsage from './pages/admin/Usage'
 import Partners from './pages/admin/Partners'
 import PartnerDetail from './pages/admin/PartnerDetail'
+import Users from './pages/admin/Users'
+import ChatMonitoring from './pages/admin/ChatMonitoring'
 
 // Client pages
 import ClientHome from './pages/client/Home'
@@ -97,6 +99,8 @@ function App() {
             <Route path="usage" element={<AdminUsage />} />
             <Route path="partners" element={<Partners />} />
             <Route path="partners/:partnerId" element={<PartnerDetail />} />
+            <Route path="users" element={<Users />} />
+            <Route path="chat-monitoring" element={<ChatMonitoring />} />
           </Route>
 
           {/* Client routes */}
