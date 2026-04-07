@@ -12,6 +12,7 @@ import PartnerLayout from './layouts/PartnerLayout'
 // Auth pages
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
+import SetupAccount from './pages/auth/SetupAccount'
 
 // Admin pages
 import AdminDashboard from './pages/admin/Dashboard'
@@ -86,6 +87,7 @@ function App() {
           {/* Auth routes (public) */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/setup-account" element={<SetupAccount />} />
 
           {/* Admin routes */}
           <Route
