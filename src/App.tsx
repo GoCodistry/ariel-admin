@@ -29,6 +29,7 @@ import ChatMonitoring from './pages/admin/ChatMonitoring'
 // Client pages
 import ClientHome from './pages/client/Home'
 import MyAgents from './pages/client/MyAgents'
+import NewAgent from './pages/client/NewAgent'
 import AgentChat from './pages/client/AgentChat'
 import AgentConfig from './pages/client/AgentConfig'
 import Integrations from './pages/client/Integrations'
@@ -121,6 +122,7 @@ function App() {
           >
             <Route index element={<ClientHome />} />
             <Route path="agents" element={<MyAgents />} />
+            <Route path="agents/new" element={<NewAgent />} />
             <Route path="agents/:agentId/chat" element={<AgentChat />} />
             <Route path="agents/:agentId/config" element={<AgentConfig />} />
             <Route path="integrations" element={<Integrations />} />

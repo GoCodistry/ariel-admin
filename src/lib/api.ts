@@ -300,6 +300,33 @@ export interface ClientAgent {
   personality_traits?: Record<string, any>
 }
 
+export interface AgentTemplate {
+  id: string
+  name: string
+  emoji: string
+  role: string
+  communication_style: string
+  tagline: string
+  description: string
+  system_prompt: string
+}
+
+export interface IndustryBundle {
+  id: string
+  name: string
+  emoji: string
+  tagline: string
+  description: string
+  agent_templates: string[]
+  recommended_plan: string
+  industry_context: string
+}
+
+export interface AgentTemplatesResponse {
+  templates: AgentTemplate[]
+  bundles: IndustryBundle[]
+}
+
 export const clientAPI = {
   // Profile
   getProfile: () => fetchAPI<ClientProfile>('/api/client/profile'),
@@ -309,9 +336,31 @@ export const clientAPI = {
       body: JSON.stringify(data),
     }),
 
+  // Agent Templates
+  getAgentTemplates: () => fetchAPI<AgentTemplatesResponse>('/api/agent-templates'),
+
   // Agents
   getAgents: () => fetchAPI<ClientAgent[]>('/api/client/agents'),
   getAgent: (agentId: string) => fetchAPI<ClientAgent>(`/api/client/agents/${agentId}`),
+  createAgent: (data: {
+    template_id: string
+    agent_name?: string
+    channel_type: string
+    channel_config?: Record<string, any>
+  }) =>
+    fetchAPI<ClientAgent>('/api/client/agents', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  createAgentBundle: (data: {
+    bundle_id: string
+    channel_type: string
+    channel_config?: Record<string, any>
+  }) =>
+    fetchAPI<{ agents: ClientAgent[] }>('/api/client/agents/bundle', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
   updateAgentPersonality: (agentId: string, data: {
     communication_style?: string
     personality_traits?: Record<string, number>

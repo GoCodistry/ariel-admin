@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Bot, Pause, Play, Settings, MessageCircle } from 'lucide-react'
+import { Bot, Pause, Play, Settings, MessageCircle, Plus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -85,10 +85,13 @@ export default function MyAgents() {
         <Bot className="h-16 w-16 text-muted-foreground mb-4" />
         <h2 className="text-2xl font-semibold mb-2">No agents yet</h2>
         <p className="text-muted-foreground text-center mb-4">
-          Contact your account manager to set up your first AI agent.
+          Get started by creating your first AI agent from our templates.
         </p>
         <Button asChild>
-          <Link to="/dashboard/support">Get Help</Link>
+          <Link to="/dashboard/agents/new">
+            <Plus className="h-4 w-4 mr-2" />
+            Create Your First Agent
+          </Link>
         </Button>
       </div>
     )
@@ -103,6 +106,12 @@ export default function MyAgents() {
             Manage and configure your AI agents
           </p>
         </div>
+        <Button asChild>
+          <Link to="/dashboard/agents/new">
+            <Plus className="h-4 w-4 mr-2" />
+            Create New Agent
+          </Link>
+        </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
